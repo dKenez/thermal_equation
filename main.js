@@ -74,7 +74,6 @@ function draw() {
 function mouseReleased() {
   if (state === USER){
     console.log(myChord.newPoint([mouseX, mouseY]));
-    console.log(myChord.points);
   }
   return false;
 }
@@ -86,13 +85,15 @@ function windowResized() {
 function keyTyped() {
   if (key === 's') {
     state = SIMULATION;
-
+    myChord.mirrorPoints();
 
 
   } else if (key === 'd') {
     state = USER;
   } else if (key === 'r' && state === USER) {
-    points = [];
+    myChord.points = [];
+  } else if (key === 'x' && state === USER) {
+    console.log(myChord.points);
   }
 
   return false;
