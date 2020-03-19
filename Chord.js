@@ -57,7 +57,7 @@ class Chord {
       }
       i++;
     }
-    this.mirroredPoints.concat()
+    this.mirroredPoints.concat();
   }
 
 }
