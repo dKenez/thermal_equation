@@ -5,6 +5,8 @@ class Chord {
     this.res = res;
     this.fourierRes = fourierRes;
     this.points = [];
+    this.mirroredPoints = []; // valtozas 20/03/19
+    this.displacement = False; // valtozas 20/03/19
   }
 
   newPoint(point) {
@@ -37,6 +39,25 @@ class Chord {
       }
     }
     return added;
+  }
+
+  mirrorPoints() { // valtozas 20/03/19
+    this.displacement = this.points[0];
+    var i = 0;
+    var x;
+    var y;
+    for (p of this.points) {
+      if (i === 0) {
+        this.mirroredPoints.push([0, 0]);
+      } else {
+        x = p[0] - this.displacement[0];
+        y = p[1] - this.displacement[1];
+        this.mirroredPoints.push([x, y]);
+        this.mirroredPoints.unshift([-x, -y]);
+      }
+      i++;
+    }
+    this.mirroredPoints.concat()
   }
 
 }
