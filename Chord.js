@@ -104,7 +104,7 @@ class Chord {
     //Fourier egutthatok kiszamitasa:
     this.E_k = [];
     this.alpha_k = [];
-    let p = 2 * this.length;
+    let p = this.length;
     let c = this.thermalCoeff;
     let res = this.fourierRes;
     for (let k = 1; k < res; k++) {
