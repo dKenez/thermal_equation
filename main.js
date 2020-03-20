@@ -7,13 +7,8 @@ let timeInt = 0.1;
 let timePrev = 0;
 let points = [];
 let state = -1;
-let test = false;
 
-
-myChord = new Chord(10, 100, 20);
-console.log(myChord.thermalCoeff);
-console.log(myChord.res);
-console.log(myChord.fourierRes);
+myChord = new Chord(50, 100, 50);
 
 function setup() {
   // put setup code here
@@ -39,36 +34,29 @@ function draw() {
 
     else if (state == SIMULATION) {
       t = (millis() / 1000) - timeStart;
-      if (t - timePrev > timeInt) {
-        background(220);
-        timePrev = t;
-        // console.log(t);
-        myChord.getPoints(t);
-        translate(myChord.displacement[0], myChord.displacement[1]);
 
-        if (!test) {
-          // console.log(myChord.shape.length);
-          // console.log(myChord.shape);
+      background(220);
+      timePrev = t;
+      // console.log(t);
+      myChord.getPoints(t);
+      translate(myChord.displacement[0], myChord.displacement[1]);
 
-          test = true;
-        }
-        beginShape();
-        stroke(0);
-        noFill();
-        for (p of myChord.shape) {
-          vertex(p[0], p[1]);
-        }
-        endShape();
-
-        translate(-myChord.displacement[0], -myChord.displacement[1]);
-        beginShape();
-        stroke(0);
-        noFill();
-        for (p of myChord.points) {
-          vertex(p[0], p[1]);
-        }
-        endShape();
+      beginShape();
+      stroke(30);
+      noFill();
+      for (p of myChord.shape) {
+        vertex(p[0], p[1]);
       }
+      endShape();
+
+      translate(-myChord.displacement[0], -myChord.displacement[1]);
+      beginShape();
+      stroke(0);
+      noFill();
+      for (p of myChord.points) {
+        vertex(p[0], p[1]);
+      }
+      endShape();
     }
 
 
@@ -89,8 +77,8 @@ function windowResized() {
 function keyTyped() {
   if (key === 's') {
     state = SIMULATION;
-    myChord.mirrorPoints();
 
+    myChord.mirrorPoints();
     myChord.calcFuncList();
     myChord.fourierCalc();
 
@@ -104,7 +92,7 @@ function keyTyped() {
     myChord.points = [];
   } else if (key === 'x') {
     console.log(myChord.shape);
-    console.log(myChord.E_k);
+    // console.log(myChord.E_k);
   }
 
   return false;

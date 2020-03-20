@@ -8,6 +8,7 @@ class Chord {
     this.mirroredPoints = []; // valtozas 20/03/19
     this.displacement = false; // valtozas 20/03/19
     this.funcList = [];
+    this.grad = [];
     this.E_k = [];
     this.alpha_k = [];
     this.shape = [];
@@ -46,7 +47,16 @@ class Chord {
     return added;
   }
 
+  calcGradFunc() {
+      // ax + b
+      let a = (this.points[this.points.length-1][1] - this.points[0][1]) / (this.points[this.points.length-1][0] - this.points[0][0]);
+      let b = this.points[0][1] - a * this.points[0][0];
+
+      this.grad = a;
+  }
+
   mirrorPoints() { // valtozas 20/03/19
+    this.mirroredPoints = [];
     this.displacement = this.points[0];
     let i = 0;
     let x;
@@ -56,7 +66,7 @@ class Chord {
         this.mirroredPoints.push([0, 0]);
       } else {
         x = p[0] - this.displacement[0];
-        y = p[1] - this.displacement[1];
+        y = p[1] - this.displacement[1] - this.grad * x;
         this.mirroredPoints.push([x, y]);
         this.mirroredPoints.unshift([-x, -y]);
       }
@@ -67,11 +77,12 @@ class Chord {
 
   calcFuncList() {
     //egyenes illesztés:
+    this.funcList = [];
     for (let i = 0; i < this.mirroredPoints.length-1; i++) {
       //= a mint meredekség
       let a = (this.mirroredPoints[i+1][1] - this.mirroredPoints[i][1]) / (this.mirroredPoints[i+1][0] - this.mirroredPoints[i][0]);
       //konstans b értéke:
-      let b = this.mirroredPoints[i][1] - a*this.mirroredPoints[i][0];
+      let b = this.mirroredPoints[i][1] - a * this.mirroredPoints[i][0];
       //az egyenes értelmezési intervalluma a vásznon, az egér pozícióját kiolvasva a points-ból
       let x1 = this.mirroredPoints[i][0];
       let x2 = this.mirroredPoints[i+1][0];
@@ -81,7 +92,9 @@ class Chord {
 
   fourierCalc() {
     //Fourier egutthatok kiszamitasa:
-    let p = this.length;
+    this.E_k = [];
+    this.alpha_k = [];
+    let p = 2 * this.length;
     let c = this.thermalCoeff;
     let res = this.fourierRes;
     for (let k = 1; k < res; k++) {
@@ -96,7 +109,7 @@ class Chord {
         b_k += (-k * PI * a * j * cos((k * PI * j) / p)) + (p * a * sin((k * PI * j) / p)) + (-k * PI * b * cos((k * PI * j) / p));
         b_k += (k * PI * a * i * cos((k * PI * i) / p)) + (-p * a * sin((k * PI * i) / p)) + (k * PI * b * cos((k * PI * i) / p));
       }
-      b_k *= 2 / ((PI**2) * (k**2));
+      b_k *= 1 / ((PI**2) * (k**2));
       this.E_k.push(b_k);
     }
   }
@@ -113,6 +126,7 @@ class Chord {
         // //Ha hoveszteseggel is szamolunk
         // y *= exp(-this.dampening*t);
       }
+      y += this.grad * x;
       this.shape.push([x, y]);
     }
   }
