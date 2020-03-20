@@ -2,40 +2,18 @@ const USER = 0;
 const SIMULATION = 1;
 
 let time = 0;
+let timeStart = 0;
+let timeInt = 0.1;
+let timePrev = 0;
 let points = [];
 let state = -1;
+let test = false;
 
-myChord = new Chord(1, 1000, 20);
 
-// function addNewPoint(point) {
-//   var added = false;
-//   if (points.length === 0) {
-//     points.push(point);
-//     added = true;
-//   } else {
-//     for (i = 0; i < points.length; i++){
-//       if (point[0] === points[i][0]) {
-//         points[i] = point;
-//         added = true;
-//         break;
-//       }
-//       if (point[0] < points[i][0]) {
-//         var front = points.slice(0, i);
-//         var back = points.slice(i);
-//
-//         front.push(point);
-//         points = front.concat(back);;
-//         added = true;
-//         break;
-//       }
-//     }
-//     if (!added) {
-//       points.push(point);
-//       added = true;
-//     }
-//   }
-//   return added;
-// }
+myChord = new Chord(10, 100, 20);
+console.log(myChord.thermalCoeff);
+console.log(myChord.res);
+console.log(myChord.fourierRes);
 
 function setup() {
   // put setup code here
@@ -45,9 +23,9 @@ function setup() {
 
 function draw() {
   // put drawing code here
-    background(220);
 
     if (state == USER) {
+      background(220);
       beginShape();
 
       stroke(0);
@@ -60,20 +38,46 @@ function draw() {
     }
 
     else if (state == SIMULATION) {
+      t = (millis() / 1000) - timeStart;
+      if (t - timePrev > timeInt) {
+        background(220);
+        timePrev = t;
+        // console.log(t);
+        myChord.getPoints(t);
+        translate(myChord.displacement[0], myChord.displacement[1]);
 
+        if (!test) {
+          // console.log(myChord.shape.length);
+          // console.log(myChord.shape);
+
+          test = true;
+        }
+        beginShape();
+        stroke(0);
+        noFill();
+        for (p of myChord.shape) {
+          vertex(p[0], p[1]);
+        }
+        endShape();
+
+        translate(-myChord.displacement[0], -myChord.displacement[1]);
+        beginShape();
+        stroke(0);
+        noFill();
+        for (p of myChord.points) {
+          vertex(p[0], p[1]);
+        }
+        endShape();
+      }
     }
+
+
 }
 
-// function mousePressed() {
-//   state = USER;
-//   drawing = [];
-//   time = 0;
-//   path = [];
-// }
 
 function mouseReleased() {
   if (state === USER){
-    console.log(myChord.newPoint([mouseX, mouseY]));
+    myChord.newPoint([mouseX, mouseY]);
   }
   return false;
 }
@@ -87,13 +91,20 @@ function keyTyped() {
     state = SIMULATION;
     myChord.mirrorPoints();
 
+    myChord.calcFuncList();
+    myChord.fourierCalc();
+
+    timeStart = millis() / 1000;
+    timePrev = timeStart;
+
 
   } else if (key === 'd') {
     state = USER;
   } else if (key === 'r' && state === USER) {
     myChord.points = [];
-  } else if (key === 'x' && state === USER) {
-    console.log(myChord.points);
+  } else if (key === 'x') {
+    console.log(myChord.shape);
+    console.log(myChord.E_k);
   }
 
   return false;
