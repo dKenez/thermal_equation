@@ -12,6 +12,8 @@ class Chord {
     this.E_k = [];
     this.alpha_k = [];
     this.shape = [];
+    this.maxY = 0;
+    this.minY = 0;
   }
 
   newPoint(point) {
@@ -67,12 +69,20 @@ class Chord {
       } else {
         x = p[0] - this.displacement[0];
         y = p[1] - this.displacement[1] - this.grad * x;
+        if (y > this.maxY) {
+          this.maxY = y;
+        }
+        if (y < this.minY) {
+          this.minY = y;
+        }
         this.mirroredPoints.push([x, y]);
         this.mirroredPoints.unshift([-x, -y]);
       }
       i++;
     }
     this.mirroredPoints.concat();
+    console.log(this.minY);
+    console.log(this.maxY);
   }
 
   calcFuncList() {

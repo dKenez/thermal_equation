@@ -38,25 +38,28 @@ function draw() {
       background(220);
       timePrev = t;
       // console.log(t);
-      myChord.getPoints(t);
-      translate(myChord.displacement[0], myChord.displacement[1]);
-
       beginShape();
-      stroke(30);
-      noFill();
-      for (p of myChord.shape) {
-        vertex(p[0], p[1]);
-      }
-      endShape();
-
-      translate(-myChord.displacement[0], -myChord.displacement[1]);
-      beginShape();
-      stroke(0);
+      stroke(80);
       noFill();
       for (p of myChord.points) {
         vertex(p[0], p[1]);
       }
       endShape();
+
+      myChord.getPoints(t);
+      translate(myChord.displacement[0], myChord.displacement[1]);
+
+      let pPrev = [0, 0];
+      for (p of myChord.shape) {
+        colorMode(HSB);
+        let midY = (pPrev[1] + p[1]) / 2;
+        let H = map(midY, myChord.minY, myChord.maxY, 0, 100, true);
+        stroke(H, 204, 204);
+        noFill();
+        line(pPrev[0], pPrev[1], p[0], p[1]);
+        pPrev[0] = p[0];
+        pPrev[1] = p[1];
+      }
     }
 
 
