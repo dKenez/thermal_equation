@@ -8,7 +8,7 @@ let timePrev = 0;
 let points = [];
 let state = USER;
 
-myChord = new Chord(75, 100, 50);
+myChord = new Chord(50, 100, 150);
 
 function setup() {
   // put setup code here
@@ -21,10 +21,10 @@ function draw() {
 
     if (state == USER) {
       colorMode(RGB);
-      background(180);
+      background(0);
       beginShape();
 
-      stroke(20);
+      stroke(120);
       noFill();
       for (p of myChord.points) {
         vertex(p[0], p[1]);
@@ -36,10 +36,10 @@ function draw() {
     else if (state == SIMULATION) {
       t = (millis() / 1000) - timeStart;
       colorMode(RGB);
-      background(180);
+      background(0);
       timePrev = t;
       // console.log(t);
-      colorMode(HSB)
+
       beginShape();
       stroke(50);
       noFill();
@@ -48,13 +48,14 @@ function draw() {
       }
       endShape();
 
+      colorMode(HSB)
       myChord.getPoints(t);
       translate(myChord.displacement[0], myChord.displacement[1]);
       let pPrev = [0, 0];
       for (p of myChord.shape) {
-        ;
         let midY = (pPrev[1] + p[1]) / 2;
-        let H = map(midY, myChord.minY, myChord.maxY, 0, 110, true);
+        H = map(midY, myChord.minY, myChord.maxY, 0, 110, true);
+
         stroke(H, 100, 100);
         noFill();
         line(pPrev[0], pPrev[1], p[0], p[1]);
@@ -95,8 +96,9 @@ function keyTyped() {
   } else if (key === 'r' && state === USER) {
     myChord.points = [];
   } else if (key === 'x') {
-    console.log(myChord.shape);
-    // console.log(myChord.E_k);
+    // console.log(myChord.shape);
+    // console.log(myChord.mirroredPoints);
+    // console.log(myChord.length);
   }
 
   return false;

@@ -5,8 +5,8 @@ class Chord {
     this.res = res;
     this.fourierRes = fourierRes;
     this.points = [];
-    this.mirroredPoints = []; // valtozas 20/03/19
-    this.displacement = false; // valtozas 20/03/19
+    this.mirroredPoints = [];
+    this.displacement = false;
     this.funcList = [];
     this.grad = [];
     this.E_k = [];
@@ -57,7 +57,7 @@ class Chord {
       this.grad = a;
   }
 
-  mirrorPoints() { // valtozas 20/03/19
+  mirrorPoints() {
     this.mirroredPoints = [];
     this.displacement = this.points[0];
     let i = 0;
@@ -126,7 +126,7 @@ class Chord {
     //Fourier sorfejtett ertekek meghatarozasa:
 
     this.shape = [];
-    for (let i = 0; i < this.res; i++) {
+    for (let i = 0; i < this.res+1; i++) {
       let x = (this.length / this.res) * i;
       let y = 0;
       for (let k = 0; k < this.fourierRes-1; k++){
